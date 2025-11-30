@@ -24,7 +24,7 @@ def detect_plate_number(image_path):
     contours = sorted(contours, key=cv2.contourArea, reverse=True)
     plate_contour = None
     for contour in contours:
-        # Approximate the contour to a polygon
+    # Approximate the contour to a polygon
         epsilon = 0.02 * cv2.arcLength(contour, True)
         approx = cv2.approxPolyDP(contour, epsilon, True)
         # Check if the contour has 4 vertices (which may be a rectangle, typical for plates)
@@ -32,12 +32,12 @@ def detect_plate_number(image_path):
             plate_contour = approx
             break
     if plate_contour is not None:
-        # Draw a bounding box around the detected license plate
+    # Draw a bounding box around the detected license plate
         x, y, w, h = cv2.boundingRect(plate_contour)
         plate_image = gray[y:y + h, x:x + w]
         # Apply thresholding to binarize the plate area
         _, thresh = cv2.threshold(plate_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        # Perform OCR on the detected plate area
+    # Perform OCR on the detected plate area
         plate_number = pytesseract.image_to_string(thresh, config='--psm 8')  # Treat it as a single word
         return plate_number.strip()
     else:
